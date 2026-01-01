@@ -1,0 +1,437 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Fireworks</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link href="https://fonts.googleapis.com/css?family=Russo+One" rel="stylesheet">
+  <link rel="stylesheet" href="./css/reset.min.css">
+  <link rel="stylesheet" href="./css/style.css">
+
+</head>
+
+<body>
+
+  <div style="height: 0; width: 0; position: absolute; visibility: hidden;">
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <symbol id="icon-play" viewBox="0 0 24 24">
+        <path d="M8 5v14l11-7z" />
+      </symbol>
+      <symbol id="icon-pause" viewBox="0 0 24 24">
+        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+      </symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24">
+        <path
+          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+      </symbol>
+      <symbol id="icon-settings" viewBox="0 0 24 24">
+        <path
+          d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
+      </symbol>
+      <symbol id="icon-sound-on" viewBox="0 0 24 24">
+        <path
+          d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+      </symbol>
+      <symbol id="icon-sound-off" viewBox="0 0 24 24">
+        <path
+          d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+      </symbol>
+    </svg>
+  </div>
+
+  <div class="container">
+    <div class="loading-init">
+      <div class="loading-init__header">Loading</div>
+      <div class="loading-init__status"> </div>
+    </div>
+    <div class="stage-container remove">
+      <div class="canvas-container">
+        <canvas id="trails-canvas"></canvas>
+        <canvas id="main-canvas"></canvas>
+      </div>
+      <div class="controls">
+        <div class="btn pause-btn">
+          <svg fill="white" width="24" height="24">
+            <use href="#icon-pause" xlink:href="#icon-pause"></use>
+          </svg>
+        </div>
+        <div class="btn sound-btn">
+          <svg fill="white" width="24" height="24">
+            <use href="#icon-sound-off" xlink:href="#icon-sound-off"></use>
+          </svg>
+        </div>
+        <div class="btn settings-btn">
+          <svg fill="white" width="24" height="24">
+            <use href="#icon-settings" xlink:href="#icon-settings"></use>
+          </svg>
+        </div>
+      </div>
+      <div class="menu hide">
+        <div class="menu__inner-wrap">
+          <div class="btn btn--bright close-menu-btn">
+            <svg fill="white" width="24" height="24">
+              <use href="#icon-close" xlink:href="#icon-close"></use>
+            </svg>
+          </div>
+          <div class="menu__header">Settings</div>
+          <div class="menu__subheader">For more info, click any label.</div>
+          <form>
+            <div class="form-option form-option--select">
+              <label class="shell-type-label">Shell Type</label>
+              <select class="shell-type"></select>
+            </div>
+            <div class="form-option form-option--select">
+              <label class="shell-size-label">Shell Size</label>
+              <select class="shell-size"></select>
+            </div>
+            <div class="form-option form-option--select">
+              <label class="quality-ui-label">Quality</label>
+              <select class="quality-ui"></select>
+            </div>
+            <div class="form-option form-option--select">
+              <label class="sky-lighting-label">Sky Lighting</label>
+              <select class="sky-lighting"></select>
+            </div>
+            <div class="form-option form-option--select">
+              <label class="scaleFactor-label">Scale</label>
+              <select class="scaleFactor"></select>
+            </div>
+            <div class="form-option form-option--checkbox">
+              <label class="auto-launch-label">Auto Fire</label>
+              <input class="auto-launch" type="checkbox" />
+            </div>
+            <div class="form-option form-option--checkbox form-option--finale-mode">
+              <label class="finale-mode-label">Finale Mode</label>
+              <input class="finale-mode" type="checkbox" />
+            </div>
+            <div class="form-option form-option--checkbox">
+              <label class="hide-controls-label">Hide Controls</label>
+              <input class="hide-controls" type="checkbox" />
+            </div>
+            <div class="form-option form-option--checkbox form-option--fullscreen">
+              <label class="fullscreen-label">Fullscreen</label>
+              <input class="fullscreen" type="checkbox" />
+            </div>
+            <div class="form-option form-option--checkbox">
+              <label class="long-exposure-label">Open Shutter</label>
+              <input class="long-exposure" type="checkbox" />
+            </div>
+          </form>
+          <div class="credits">
+            Passionately built by Caleb Miller.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="help-modal">
+      <div class="help-modal__overlay"></div>
+      <div class="help-modal__dialog">
+        <div class="help-modal__header"></div>
+        <div class="help-modal__body"></div>
+        <button type="button" class="help-modal__close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src='./js/fscreen.js'></script>
+  <script src="./js/Stage.js"></script>
+  <script src='./js/MyMath.js'></script>
+  <script src='./js/script.js'></script>
+
+  <!-- --- Custom Integration Logic --- -->
+  <style>
+    /* Overlay CSS */
+    #custom-ui-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 9999;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Times New Roman', serif;
+    }
+
+    .start-btn {
+      pointer-events: auto;
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: #333;
+      background: #ffeb3b;
+      border: 4px solid #fff;
+      padding: 15px 30px;
+      border-radius: 15px;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #fbc02d;
+      transition: transform 0.1s;
+      animation: none;
+    }
+
+    .start-btn:active {
+      transform: translateY(5px);
+      box-shadow: 0 0 0 #fbc02d;
+    }
+
+    .countdown {
+      font-family: 'VT323', monospace;
+      font-size: 10rem;
+      color: #ffeb3b;
+      text-shadow: 4px 4px 0 #ff9800;
+      opacity: 0;
+      transform: scale(0.5);
+      transition: all 0.5s ease;
+    }
+
+    .main-title {
+      position: absolute;
+      top: 20%;
+      width: 100%;
+      text-align: center;
+      font-family: 'Patrick Hand', 'Segoe UI Emoji', 'Apple Color Emoji', sans-serif;
+      font-size: 3.5rem;
+      /* create rainbow effect without breaking emojis using animation on color/shadow */
+      color: #ffeb3b;
+      text-shadow: 0 0 10px #ff00cc, 0 0 20px #00ffff;
+      animation: pulse-shadow 2s infinite;
+      opacity: 0;
+      transition: opacity 2s ease;
+      padding: 20px 20px;
+      line-height: 1.5;
+      pointer-events: none;
+    }
+
+    .floating-wish {
+      position: absolute;
+      bottom: -50px;
+      font-family: 'Patrick Hand', 'Segoe UI Emoji', 'Apple Color Emoji', sans-serif;
+      font-size: 26px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 2px 2px 0px #000, 0 0 10px rgba(255, 255, 255, 0.8);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    @keyframes pulse-shadow {
+      0% {
+        text-shadow: 0 0 10px #ff00cc, 0 0 20px #00ffff;
+        transform: scale(1);
+      }
+
+      50% {
+        text-shadow: 0 0 20px #ff00cc, 0 0 40px #00ffff;
+        transform: scale(1.05);
+      }
+
+      100% {
+        text-shadow: 0 0 10px #ff00cc, 0 0 20px #00ffff;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes pulse-glow {
+      0% {
+        box-shadow: 0 0 15px #ff007f, inset 0 0 10px #ff007f;
+      }
+
+      50% {
+        box-shadow: 0 0 30px #ff00ff, inset 0 0 20px #ff00ff;
+      }
+
+      100% {
+        box-shadow: 0 0 15px #ff007f, inset 0 0 10px #ff007f;
+      }
+    }
+
+    @keyframes shine {
+      to {
+        background-position: 200% center;
+      }
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+        transform: translateY(-20px) scale(1);
+      }
+
+      90% {
+        opacity: 0.8;
+      }
+
+      100% {
+        transform: translateY(-80vh) scale(1.2);
+        opacity: 0;
+      }
+    }
+
+    .fade-out {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transition: opacity 0.5s;
+    }
+
+    .scale-in {
+      opacity: 1 !important;
+      transform: scale(1) !important;
+    }
+  </style>
+
+  <div id="custom-ui-layer">
+    <!-- New Fonts: Patrick Hand for wishes, VT323 for Start Screen -->
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=VT323&display=swap" rel="stylesheet">
+
+    <h1 class="main-title" id="mainTitle" style="font-family: 'Patrick Hand', cursive;">Chúc Bạn Năm Mới 2026! 🎆</h1>
+    <button id="startBtn" class="start-btn">🔥 Click đi bạn êi 🔥</button>
+    <div id="countdown" class="countdown"></div>
+  </div>
+
+  <script>
+    // Integration Script
+    window.addEventListener('load', () => {
+      const startBtn = document.getElementById('startBtn');
+      const countdownEl = document.getElementById('countdown');
+      const mainTitle = document.getElementById('mainTitle');
+      const uiLayer = document.getElementById('custom-ui-layer');
+
+      // 1. Initial State: Pause Fireworks & Audio
+      if (typeof store !== 'undefined') {
+        store.setState({
+          paused: true,
+          menuOpen: false,
+          config: Object.assign({}, store.state.config, {
+            autoLaunch: false,
+            hideControls: true
+          })
+        });
+      }
+
+      // 2. Start Sequence
+      startBtn.addEventListener('click', () => {
+        // Unlock AudioContext
+        if (typeof soundManager !== 'undefined') {
+          soundManager.resumeAll();
+        }
+
+        // Fullscreen attempt
+        if (typeof toggleFullscreen === 'function') {
+          // toggleFullscreen(); // Optional: might be annoying if forced
+        }
+
+        // UI Transition
+        startBtn.classList.add('fade-out');
+
+        // Countdown
+        let count = 3;
+        countdownEl.innerText = count;
+        countdownEl.classList.add('scale-in');
+
+        const timer = setInterval(() => {
+          count--;
+          if (count > 0) {
+            countdownEl.classList.remove('scale-in');
+            void countdownEl.offsetWidth;
+            countdownEl.innerText = count;
+            countdownEl.classList.add('scale-in');
+          } else {
+            clearInterval(timer);
+            countdownEl.classList.remove('scale-in');
+            countdownEl.classList.add('fade-out');
+            launchShow();
+          }
+        }, 1000);
+      });
+
+      function launchShow() {
+        // Show Title
+        mainTitle.style.opacity = '1';
+
+        // Enable Fireworks
+        if (typeof store !== 'undefined') {
+          store.setState({
+            paused: false,
+            soundEnabled: true,
+            config: Object.assign({}, store.state.config, {
+              autoLaunch: true,
+              finale: true // Start with a bang? or just normal
+            })
+          });
+          // Turn off finale after a few seconds to settle down
+          setTimeout(() => {
+            store.setState({
+              config: Object.assign({}, store.state.config, { finale: false })
+            });
+          }, 5000);
+        }
+
+
+        // Start Wishes AFTER 7 seconds (Title solo time)
+        setTimeout(() => {
+          // Fade out title so wishes have the stage
+          mainTitle.style.opacity = '0';
+          setTimeout(() => {
+            // Start wishes after title fades
+            setInterval(createFloatingWish, 2500);
+          }, 2000); // 2s for fade out transition
+        }, 7000);
+
+      }
+
+      const wishes = [
+        "Năm mới thoát ế nha 🐶",
+        "Tiền đầy túi, tình đầy tim 💰",
+        "Sớm trả nợ tao nha 💸",
+        "Ăn mãi không béo 🍕",
+        "Xinh đẹp tuyệt trần ✨",
+        "Giàu ú ụ nha má 💎",
+        "Bớt nghiệp lại nha 😂",
+        "Mãi là anh em tốt 🤜🤛",
+        "Sớm thành đại gia bao tao 🚗",
+        "Thành công rực rỡ 🌟",
+        "Thi đạt điểm cao🥰",
+        "Tết lì xi tau nha 🎉",
+      ];
+
+      const colors = [
+        '#FFD700', // Vàng
+        '#FF4500', // Cam đỏ
+        '#00FF00', // Xanh lá
+        '#00FFFF', // Xanh cyan
+        '#FF1493', // Hồng đậm
+        '#FFFFFF'  // Trắng
+      ];
+
+      function createFloatingWish() {
+        const wishText = wishes[Math.floor(Math.random() * wishes.length)];
+        const el = document.createElement('div');
+        el.classList.add('floating-wish');
+        el.innerText = wishText;
+        el.style.left = Math.random() * 80 + 10 + '%';
+
+        // Random colors from the list
+        const randomColor = colors[Math.floor(Math.random() * colors.length)];
+        el.style.color = randomColor;
+        el.style.textShadow = `0 0 10px ${randomColor}`;
+
+        el.style.fontSize = '26px';
+        el.style.fontFamily = "'Patrick Hand', cursive";
+        const duration = Math.random() * 3 + 4;
+        el.style.animation = `floatUp ${duration}s ease-out forwards`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), duration * 1000);
+      }
+    });
+  </script>
+</body>
+
+</html>
